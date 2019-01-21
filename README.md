@@ -91,3 +91,23 @@ docker service ls
 ## Using other registry 
 docker login quay.io
 docker stack deploy --with-registry-auth -c docker-compose.yml hellopython
+
+
+# Swarmes using VM
+## Create virtual machines
+docker-machine create --driver virtualbox myvm1
+docker-machine create --driver virtualbox myvm2
+
+## List machines
+docker-machine ls
+
+> NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+> myvm1   -        virtualbox   Running   tcp://192.168.99.101:2376           v18.09.1
+> myvm2   -        virtualbox   Running   tcp://192.168.99.102:2376           v18.09.1
+
+## Make the first node as a manager
+docker-machine ssh myvm1 "docker swarm init --advertise-addr 192.168.99.101:2376"
+
+## The second node joins as a worker
+docker-machine ssh myvm2 "docker swarm join --token SWMTKN-1-3r4f28av03cizue9jcv2m9lsuq1c8vlz3vlltnhy1fminc4tl2-aolz8zrqpc00o301tw35epe58 192.168.99.101:2377"
+
