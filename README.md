@@ -129,3 +129,11 @@ docker-machine ssh myvm1 "mkdir ./data"
 
 192.168.99.101:8080 - Visualizer
 192.168.99.101 - the app
+
+
+## Verify running services
+docker service ls
+ID                  NAME                       MODE                REPLICAS            IMAGE                             PORTS
+x7uij6xb4foj        getstartedlab_redis        replicated          1/1                 redis:latest                      *:6379->6379/tcp
+n5rvhm52ykq7        getstartedlab_visualizer   replicated          1/1                 dockersamples/visualizer:stable   *:8080->8080/tcp
+mifd433bti1d        getstartedlab_web          replicated          5/5                 gordon/getstarted:latest    *:80->80/tcp
