@@ -133,7 +133,14 @@ docker-machine ssh myvm1 "mkdir ./data"
 
 ## Verify running services
 docker service ls
-ID                  NAME                       MODE                REPLICAS            IMAGE                             PORTS
-x7uij6xb4foj        getstartedlab_redis        replicated          1/1                 redis:latest                      *:6379->6379/tcp
-n5rvhm52ykq7        getstartedlab_visualizer   replicated          1/1                 dockersamples/visualizer:stable   *:8080->8080/tcp
-mifd433bti1d        getstartedlab_web          replicated          5/5                 gordon/getstarted:latest    *:80->80/tcp
+ID                  NAME                     MODE                REPLICAS            IMAGE        PORTS
+y4v5d664qgz0        hellopython_redis        replicated          1/1                 redis:latest        *:6379->6379/tcp
+u00unbcg1qid        hellopython_visualizer   replicated          1/1                 dockersamples/visualizer:stable   *:8080->8080/tcp
+8v3s6iwnriv8        hellopython_web          replicated          3/3                 herbowicz/hellopython:latest      *:80->80/tcp
+
+## View tasks for a service
+docker service ps 8v3s6iwnriv8
+ID                  NAME                IMAGE                          NODE                DESIRED STATECURRENT STATE         ERROR               PORTS
+8zxkx2ak8wjx        hellopython_web.1   herbowicz/hellopython:latest   myvm1               RunningRunning 6 hours ago
+ur4igerxg6p3        hellopython_web.2   herbowicz/hellopython:latest   myvm2               RunningRunning 6 hours ago
+bdybg89oxnnt        hellopython_web.3   herbowicz/hellopython:latest   myvm2               Running
