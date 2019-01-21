@@ -101,9 +101,9 @@ docker-machine create --driver virtualbox myvm2
 ## List machines
 docker-machine ls
 
-> NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
-> myvm1   -        virtualbox   Running   tcp://192.168.99.101:2376           v18.09.1
-> myvm2   -        virtualbox   Running   tcp://192.168.99.102:2376           v18.09.1
+NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+myvm1   -        virtualbox   Running   tcp://192.168.99.101:2376           v18.09.1
+myvm2   -        virtualbox   Running   tcp://192.168.99.102:2376           v18.09.1
 
 ## Make the first node as a manager
 docker-machine ssh myvm1 "docker swarm init --advertise-addr 192.168.99.101:2376"
@@ -111,3 +111,21 @@ docker-machine ssh myvm1 "docker swarm init --advertise-addr 192.168.99.101:2376
 ## The second node joins as a worker
 docker-machine ssh myvm2 "docker swarm join --token SWMTKN-1-3r4f28av03cizue9jcv2m9lsuq1c8vlz3vlltnhy1fminc4tl2-aolz8zrqpc00o301tw35epe58 192.168.99.101:2377"
 
+## Set env variable to the first node
+eval $(docker-machine env myvm1)
+
+## Re-run stack deploy
+docker stack deploy -c docker-compose.yml hellopython
+
+## List machines (node with star is the manager)
+docker-machine ssh myvm1 "docker node ls"
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+p5yeuwqxtr72vq4dtfg5nfxcp *   myvm1               Ready               Active              Leader              18.09.1
+dxb3uk06og030q738jo3z5jf3     myvm2               Ready               Active                                  18.09.1
+
+
+## Create space for redis on the manager
+docker-machine ssh myvm1 "mkdir ./data"
+
+192.168.99.101:8080 - Visualizer
+192.168.99.101 - the app
